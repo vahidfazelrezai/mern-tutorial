@@ -3,6 +3,9 @@ var path = require('path');
 var fs = require('fs');
 var express = require('express');
 
+// IMPORTS //
+var indexRoutes = require('./routes/index');
+
 // CREATE APP //
 var app = express();
 
@@ -13,20 +16,14 @@ app.engine('html', function (path, options, callbacks) {
 });
 
 // MIDDLEWARE //
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, '../client')));
 
 // ROUTES //
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.use('/', indexRoutes);
 
 // ERROR HANDLER //
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
 });
 
-// SERVE APP //
-var port = 8000;
-app.listen(port, function () {
-  console.log('running at localhost:' + port);
-});
+module.exports = app;
